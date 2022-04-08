@@ -191,7 +191,11 @@
                   echo '<div class="alert alert-danger">
                   Não há contato cadastrado!</div>';
                 }
-              <form action="" method="post" enctype="multipart/form-data">
+              }catch(PDOException $e){
+                echo "<strong>ERRO DE PDO = </strong>".$e->getMessage();
+              }
+                ?>
+               <form action="" method="post" enctype="multipart/form-data">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="exampleInputPassword1">Nome</label>
@@ -205,7 +209,6 @@
                     <label for="exampleInputEmail1">Endereço de E-mail</label>
                     <input name="email" type="email" class="form-control" id="exampleInputEmail1" placeholder="Digite o endereço de e-mail...">
                   </div>
-                  
                   <div class="form-group">
                     <label for="exampleInputFile">Foto do contato</label>
                     <div class="input-group">
@@ -213,13 +216,10 @@
                         <input name="foto" type="file" class="custom-file-input" id="exampleInputFile">
                         <label class="custom-file-label" for="exampleInputFile">Upload da foto</label>
                       </div>
-                      
                     </div>
                   </div>
-                  
                 </div>
                 <!-- /.card-body -->
-
                 <div class="card-footer">
                   <button name="btnCContato" type="submit" class="btn btn-primary">Editar Contato</button>
                 </div>
@@ -231,6 +231,7 @@
                       $nome = $_POST['nome'];
                       $telefone = $_POST['telefone'];
                       $email = $_POST['email'];
+                      if(!empty($_FILES['foto']['name'])){
                       $formatP = array("png","jpg","jpeg","JPG","gif");
                       $extensao = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
 
@@ -239,10 +240,21 @@
                           $temporario = $_FILES['foto']['tmp_name'];
                           $novoNome = uniqid().".$extensao";
                           if(move_uploaded_file($temporario, $pasta.$novoNome)){
-                          
-                      try{
-                        $cadastro = "INSERT INTO tb_contato (nome_contato, telefone_contato, email_contato, foto_contato) VALUES (:nome, :telefone, :email, :foto)";
-                        $result = $conect->prepare($cadastro);
+                             
+                          }else{
+                            echo "Erro, não foi possível fazer o upload do arquivo";
+                          }
+
+                      }else{
+                        echo "Formato Inválido";
+                      }
+                    }else{
+                      $novoNome = $fotoCont;
+                    }
+                        $editar = "UPDATE tb_contato SET nome_contato=:nome, telefone_contato=:telefone,email_contato=:email,foto_contato=:foto WHERE id_contato=:id";
+                        try{
+                        $result = $conect->prepare($editar);
+                        $result->bindParam(':id',$id,PDO::PARAM_STR);
                         $result->bindParam(':nome',$nome,PDO::PARAM_STR);
                         $result->bindParam(':telefone',$telefone,PDO::PARAM_STR);
                         $result->bindParam(':email',$email,PDO::PARAM_STR);
@@ -269,15 +281,7 @@
                         }
                       }catch(PDOException $e){
                         echo "<strong>ERRO DE CADASTRO PDO = </strong>".$e->getMessage();
-                      } 
-                          }else{
-                            echo "Erro, não foi possível fazer o upload do arquivo";
-                          }
-
-                      }else{
-                        echo "Formato Inválido";
                       }
-
 
 
                   } 
@@ -286,9 +290,9 @@
           </div>
           <div class="col-md-7">
             <div class="card card-primary">
-              <img src="img/contato/6218e1464b509.jpg">
-              <div class="card-body p-0" style="text-aling:center;">
-                <img style="width:150px; border-radius:100% margin-top;100px">
+              <!--<img src="img/contato/6218e1464b509.jpg">-->
+              <div class="card-body p-0" style="text-align:center;">
+                <img src="img/contato/6218e1464b509.jpg" style="width:250px; border-radius:100%; margin-top:100px;">
                <h1>Lidia Almeida</h1>
                <h1>85994440427</h1>
                <h1>lidiaalmeidaw@gmail.com</h1>

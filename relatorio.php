@@ -257,7 +257,8 @@
                     </td>
                     <td style="vertical-align:middle;"><?php echo $show->telefone_contato;?></td>
                     <td style="vertical-align:middle;"><?php echo $show->email_contato;?></td>
-                    <td style="vertical-align:middle; text-align:center;"><a href="#" title="Editar" type="submit"class="btn btn-success"><img style="width: 15px;" src="img/svg/Editar.png"></a>
+                    <td style="vertical-align:middle; text-align:center;">
+                    <a href="editar.php?idUp= <?php echo $show->id_contato;?>"title="Editar" type="submit"class="btn btn-success"><img style="width: 15px;" src="img/svg/Editar.png"></a>
                     <a href="deletar.php?idDel=<?php echo $show->id_contato;?>"onclick="return confirm('Tem certeza que deseja remover?')"title="Remover" type="submit"class="btn btn-danger"><img style="width: 15px;" src="img/svg/Remover.png"></a></td>
                   </tr>
                   <?php
